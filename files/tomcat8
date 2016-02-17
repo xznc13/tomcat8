@@ -1,0 +1,37 @@
+#!/bin/bash
+# description: Tomcat Start Stop Restart
+# processname: tomcat
+# chkconfig: 234 20 80
+JAVA_HOME=/usr/java/jdk1.8.0_65
+export JAVA_HOME
+PATH=$JAVA_HOME/bin:$PATH
+export PATH
+CATALINA_HOME=/usr/share/apache-tomcat-8.0.29
+
+tomcat_pid() {
+	echo `ps -ef | grep $CATALINA_HOME | grep -v grep | tr -s " " | cut -d" " -f2`
+}
+
+case $1 in
+start)
+	sh $CATALINA_HOME/bin/startup.sh
+;; 
+stop)   
+	sh $CATALINA_HOME/bin/shutdown.sh
+;; 
+restart)
+	sh $CATALINA_HOME/bin/shutdown.sh
+	sh $CATALINA_HOME/bin/startup.sh
+;; 
+status)
+	pid=$(tomcat_pid)
+	if [ -n "$pid" ]; 
+	  then 
+		echo "Tomcat is running with pid: $pid"
+	  else 
+		echo "Tomcat is NOT running"
+	fi
+;;
+esac    
+exit 0
+
